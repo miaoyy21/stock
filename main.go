@@ -23,7 +23,7 @@ type ResponseData struct {
 }
 
 func main() {
-	url := "http://api.biyingapi.com/hszbl/fsjy/000001/dn/1376636348bc8c31a3"
+	url := "http://api.biyingapi.com/hszbl/fsjy/600130/dn/1376636348bc8c31a3"
 	req, err := http.NewRequest("GET", url, nil)
 	if err != nil {
 		log.Fatalf("http.NewRequest ERR : %s \n", err.Error())
@@ -39,20 +39,23 @@ func main() {
 		log.Fatalf("json.Decode ERR : %s \n", err.Error())
 	}
 
-	table, err := gotable.Create("序号", "交易时间", "开盘价（元）", "最高价（元）", "最低价（元）", "收盘价（元）", "成交量（手）", "成交额（元）", "振幅（%）", "换手率（%）", "涨跌幅（%）", "涨跌额（元）")
+	table, err := gotable.Create("", "交易时间", "开盘价（元）", "收盘价（元）", "最高价（元）", "最低价（元）", "成交量（手）", "成交额（元）", "振幅（%）", "换手率（%）", "涨跌幅（%）", "涨跌额（元）")
 	if err != nil {
 		log.Fatalf("gotable.Create ERR : %s \n", err.Error())
 	}
 
-	for i, d := range ds[len(ds)-100:] {
+	table.Align("成交量（手）", gotable.Right)
+	table.Align("成交额（元）", gotable.Right)
+
+	for i, d := range ds[len(ds)-200:] {
 		v := make([]string, 0, 12)
 
 		v = append(v, fmt.Sprintf("%d", i+1))
 		v = append(v, d.Date)
 		v = append(v, d.Open)
+		v = append(v, d.Close)
 		v = append(v, d.High)
 		v = append(v, d.Low)
-		v = append(v, d.Close)
 		v = append(v, d.Volume)
 		v = append(v, d.Turnover)
 		v = append(v, d.AmplitudeRate)
